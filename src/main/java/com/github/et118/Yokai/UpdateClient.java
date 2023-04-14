@@ -15,7 +15,6 @@ import java.util.List;
 public class UpdateClient {
     public static void main(String[] args) throws IOException, GitAPIException {
         Path ModFolder = (System.getProperty("os.name").toLowerCase().contains("win") ? Path.of(System.getenv("APPDATA")) : Path.of(System.getProperty("user.home"))).resolve( ".minecraft/Profiles/Yokai/mods");
-        ModFolder = Path.of("C:\\Users\\et118\\AppData\\Roaming\\.minecraft\\Profiles\\Yokai\\mods");
         Files.createDirectories(ModFolder);
         if(!Files.exists(ModFolder.resolve(".git"))) {
             Files.walk(ModFolder).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
