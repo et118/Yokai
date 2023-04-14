@@ -1,0 +1,21 @@
+plugins {
+    id 'java'
+}
+
+group 'com.github.et118.Yokai'
+version '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.sharegov:mjson:1.4.1"
+    implementation "org.eclipse.jgit:org.eclipse.jgit:6.5.0.202303070854-r"
+}
+
+jar {
+    from (configurations.runtimeClasspath.filter{it.exists()}.collect{it.isDirectory() ? it : zipTree(it)}) {
+        exclude 'META-INF', 'META-INF/**'
+    }
+}
