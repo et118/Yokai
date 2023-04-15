@@ -1,6 +1,7 @@
 package com.github.et118.Yokai;
 
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.ResetCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
 import java.io.File;
@@ -27,6 +28,8 @@ public class UpdateClient {
             Git.open(ModFolder.toFile()).checkout().setName("mods").call();
         }
         Git.open(ModFolder.toFile()).pull().call();
+        Git.open(ModFolder.toFile()).reset().setMode(ResetCommand.ResetType.HARD).setRef("origin/mods").call();
+        Git.open(ModFolder.toFile()).clean().setCleanDirectories(true).setForce(true).call();
         startMinecraft(args);
     }
 
