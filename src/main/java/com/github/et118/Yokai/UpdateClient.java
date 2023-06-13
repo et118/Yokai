@@ -10,25 +10,27 @@ import java.lang.management.ManagementFactory;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
 public class UpdateClient {
     public static void main(String[] args) throws IOException, GitAPIException {
-        Path ModFolder = (System.getProperty("os.name").toLowerCase().contains("win") ? Path.of(System.getenv("APPDATA")) : Path.of(System.getProperty("user.home"))).resolve( ".minecraft/Profiles/Yokai/mods");
+        String version = System.getProperty("YokaiVersion").replace(" ","");
+        Path ModFolder = (System.getProperty("os.name").toLowerCase().contains("win") ? Path.of(System.getenv("APPDATA")) : Path.of(System.getProperty("user.home"))).resolve( ".minecraft/Profiles/Yokai-"+version+"/mods");
         Files.createDirectories(ModFolder);
         if(!Files.exists(ModFolder.resolve(".git"))) {
             Files.walk(ModFolder).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
             Files.createDirectories(ModFolder);
             Git.cloneRepository()
                     .setURI("https://github.com/et118/Yokai.git")
-                    .setBranch("mods")
+                    .setBranch(version)
                     .setDirectory(ModFolder.toFile())
                     .call();
-            Git.open(ModFolder.toFile()).checkout().setName("mods").call();
+            Git.open(ModFolder.toFile()).checkout().setName(version).call();
         }
         Git.open(ModFolder.toFile()).pull().call();
-        Git.open(ModFolder.toFile()).reset().setMode(ResetCommand.ResetType.HARD).setRef("origin/mods").call();
+        Git.open(ModFolder.toFile()).reset().setMode(ResetCommand.ResetType.HARD).setRef("origin/" + version).call();
         Git.open(ModFolder.toFile()).clean().setCleanDirectories(true).setForce(true).call();
         startMinecraft(args);
     }
